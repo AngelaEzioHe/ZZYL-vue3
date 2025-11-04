@@ -46,7 +46,8 @@
             @click="handleDelete(scope.row)">删除</el-button>
           <el-button link type="primary" icon="Search" @click="handleLook(scope.row)">查看</el-button>
           <el-button link type="primary" :icon="scope.row.status == 0 ? 'Unlock' : 'lock'"
-            @click="handleEnable(scope.row)">{{ scope.row.status == 1 ? '禁用' : '启用' }}</el-button>
+            @click="handleEnable(scope.row)">{{ scope.row.status == 1 ? '禁用' : '启用' }}
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
