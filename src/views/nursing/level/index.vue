@@ -71,7 +71,7 @@
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio v-for="(nls, index) in nursing_level_status" :key="index" :value="nls.value">{{
-              nls.label }}</el-radio>
+              nls.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="等级说明" prop="description">
@@ -90,7 +90,7 @@
 
 <script setup name="Level">
 import { listLevel, getLevel, delLevel, addLevel, updateLevel } from "@/api/nursing/level";
-import { listPlan } from "@/api/nursing/plan";
+import { getAllNursingPlans } from "@/api/nursing/plan";
 
 const { proxy } = getCurrentInstance();
 
@@ -134,15 +134,13 @@ const data = reactive({
 const { queryParams, form, rules } = toRefs(data);
 
 /* 查询字典项数据 */
-const { nursing_level_status } = proxy.useDict('nursing_level_status');
+const { nursing_level_status } = proxy.useDict('nursing_level_status')
 /** 查询护理等级列表 */
 function getList() {
   loading.value = true;
   listLevel(queryParams.value).then(response => {
     levelList.value = response.rows;
     total.value = response.total;
-    loading.value = false;
-  }).catch(() => {
     loading.value = false;
   });
 }
@@ -193,16 +191,6 @@ function handleSelectionChange(selection) {
 /** 新增按钮操作 */
 function handleAdd() {
   reset();
-  // 确保护理计划列表已加载
-  if (nursingPlanList.value.length === 0) {
-    getAllNursingPlanList();
-    // 如果加载失败，显示提示
-    setTimeout(() => {
-      if (nursingPlanList.value.length === 0) {
-        proxy.$modal.msgWarning("护理计划列表加载失败，请刷新页面重试");
-      }
-    }, 500);
-  }
   open.value = true;
   title.value = "添加护理等级";
 }
@@ -210,18 +198,12 @@ function handleAdd() {
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
-  const _id = row.id || (Array.isArray(ids.value) && ids.value.length > 0 ? ids.value[0] : null);
-  if (!_id) {
-    proxy.$modal.msgWarning("请选择要修改的数据");
-    return;
-  }
+  const _id = row.id || ids.value
   getLevel(_id).then(response => {
     form.value = response.data;
     form.value.status = String(response.data.status);
     open.value = true;
     title.value = "修改护理等级";
-  }).catch(() => {
-    loading.value = false;
   });
 }
 
@@ -234,16 +216,12 @@ function submitForm() {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
           getList();
-        }).catch(() => {
-          // 错误处理
         });
       } else {
         addLevel(form.value).then(response => {
           proxy.$modal.msgSuccess("新增成功");
           open.value = false;
           getList();
-        }).catch(() => {
-          // 错误处理
         });
       }
     }
@@ -252,13 +230,9 @@ function submitForm() {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const _id = row.id || (Array.isArray(ids.value) && ids.value.length > 0 ? ids.value[0] : null);
-  if (!_id) {
-    proxy.$modal.msgWarning("请选择要删除的数据");
-    return;
-  }
+  const _ids = row.id || ids.value;
   proxy.$modal.confirm('是否确认删除这条护理等级？').then(function () {
-    return delLevel(_id);
+    return delLevel(_ids);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");
@@ -270,12 +244,12 @@ const handleEnable = (row) => {
   //获取状态
   const status = row.status;
   //提示信息
-  const info = status == 0 ? '启用' : '禁用';
+  const info = status == 0 ? '启用' : '禁用'
   //构建参数
   const params = {
     id: row.id,
     status: status == 0 ? 1 : 0
-  };
+  }
   proxy.$modal.confirm(`是否确认${info}该护理等级？`).then(function () {
     return updateLevel(params);
   }).then(() => {
@@ -293,18 +267,8 @@ function handleExport() {
 
 const nursingPlanList = ref([]);
 const getAllNursingPlanList = () => {
-  // 直接使用 listPlan API 获取所有护理计划（因为 /nursing/plan/all 会与 /nursing/plan/{id} 路由冲突）
-  listPlan({ pageNum: 1, pageSize: 1000 }).then(response => {
-    if (response && response.rows) {
-      nursingPlanList.value = Array.isArray(response.rows) ? response.rows : [];
-    } else {
-      nursingPlanList.value = [];
-      console.warn('护理计划数据格式不正确:', response);
-    }
-  }).catch((error) => {
-    console.error('获取护理计划列表失败:', error);
-    nursingPlanList.value = [];
-    // 只在用户主动操作时显示错误，不在初始化时显示
+  getAllNursingPlans().then(response => {
+    nursingPlanList.value = response.data;
   });
 }
 

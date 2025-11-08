@@ -1,12 +1,13 @@
 // base color
 $blue: #324157;
-$light-blue: #333c46;
+$light-blue: #3A71A8;
 $red: #C03639;
 $pink: #E65D6E;
 $green: #30B08F;
 $tiffany: #4AB7BD;
 $yellow: #FEC171;
 $panGreen: #30B08F;
+$--color-link: #008d71;
 $--color-main: #00b8a0;
 
 // 默认主题变量
@@ -29,15 +30,32 @@ $sideBarWidth: 200px;
 $base-menu-color: #bfcbd9;
 $base-menu-color-active: #f4f4f5;
 $base-menu-background: #304156;
+$base-logo-title-color: #ffffff;
+
+$base-menu-light-color: rgba(0, 0, 0, 0.7);
+$base-menu-light-background: #ffffff;
+$base-logo-light-title-color: #001529;
+
 $base-sub-menu-background: #1f2d3d;
 $base-sub-menu-hover: #001528;
+$base-color-bk4: #999999;
+$base--color-bk2: #262626;
+$--color-bk3: #595959;
+$--color-black: #000;
+$--color-border: #e8e8e8;
+$--color-aux5: #ebf6f5;
+$--color-bk6: #bfbfbf;
+$--color-bk14: #f2f9f7;
+$base-font-size-12: 12px;
+$base-font-size-14: 14px;
+$base-font-size-16: 16px;
 
-// 组件变量
 $--color-primary: #409EFF;
 $--color-success: #67C23A;
 $--color-warning: #E6A23C;
 $--color-danger: #F56C6C;
 $--color-info: #909399;
+$base-sidebar-width: 200px;
 
 :export {
   menuText: $menuText;
@@ -72,10 +90,10 @@ $--color-info: #909399;
   --sidebar-bg: #{$menuBg};
   --sidebar-text: #{$menuText};
   --menu-hover: #{$menuHover};
-
+  
   --navbar-bg: #ffffff;
   --navbar-text: #303133;
-
+  
   /* splitpanes default-theme 变量 */
   --splitpanes-default-bg: #ffffff;
 
@@ -120,7 +138,7 @@ html.dark {
   --blockquote-bg: #1d1e1f;
   --blockquote-border: #303030;
   --blockquote-text: #d0d0d0;
-
+  
   /* Cron 时间表达式 模式变量 */
   --cron-border: #303030;
 
@@ -128,13 +146,10 @@ html.dark {
   --splitpanes-default-bg: #141414;
 
   /* 侧边栏菜单覆盖 */
-  .sidebar-container {
-
-    .el-menu-item,
-    .menu-title {
+   .sidebar-container {
+    .el-menu-item, .menu-title {
       color: var(--el-text-color-regular);
     }
-
     & .theme-dark .nest-menu .el-sub-menu>.el-sub-menu__title,
     & .theme-dark .el-sub-menu .el-menu-item {
       background-color: var(--el-bg-color) !important;
@@ -145,7 +160,6 @@ html.dark {
   .el-menu--horizontal {
     .el-menu-item {
       &:not(.is-disabled) {
-
         &:hover,
         &:focus {
           background-color: var(--navbar-hover) !important;
@@ -185,8 +199,7 @@ html.dark {
     --el-table-border-color: var(--el-border-color-light) !important;
     --el-table-row-hover-bg-color: var(--el-bg-color-overlay) !important;
 
-    .el-table__header-wrapper,
-    .el-table__fixed-header-wrapper {
+    .el-table__header-wrapper, .el-table__fixed-header-wrapper {
       th {
         background-color: var(--el-bg-color-overlay, #f8f8f9) !important;
         color: var(--el-text-color-regular, #515a6e);
@@ -196,7 +209,7 @@ html.dark {
 
   /* 树组件高亮样式覆盖 */
   .el-tree {
-    .el-tree-node.is-current>.el-tree-node__content {
+    .el-tree-node.is-current > .el-tree-node__content {
       background-color: var(--el-bg-color-overlay) !important;
       color: var(--el-color-primary);
     }
@@ -205,10 +218,9 @@ html.dark {
       background-color: var(--el-bg-color-overlay);
     }
   }
-
+  
   /* 下拉菜单样式覆盖 */
-  .el-dropdown-menu__item:not(.is-disabled):focus,
-  .el-dropdown-menu__item:not(.is-disabled):hover {
+  .el-dropdown-menu__item:not(.is-disabled):focus, .el-dropdown-menu__item:not(.is-disabled):hover{
     background-color: var(--navbar-hover) !important;
   }
 
@@ -218,10 +230,9 @@ html.dark {
     border-left-color: var(--blockquote-border) !important;
     color: var(--blockquote-text) !important;
   }
-
+  
   /* 时间表达式标题样式覆盖 */
   .popup-result .title {
     background: var(--cron-border);
   }
-
 }

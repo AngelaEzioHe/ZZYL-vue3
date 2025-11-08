@@ -5,13 +5,11 @@
       <el-form-item label="名称" prop="name">
         <el-input v-model="queryParams.name" placeholder="请输入名称" clearable @keyup.enter="handleQuery" />
       </el-form-item>
-
       <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择" clearable style="width: 240px">
+        <el-select v-model="queryParams.status" clearable placeholder="请选择" style="width: 240px">
           <el-option v-for="item in nursing_project_status" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
-
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
         <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -39,10 +37,10 @@
         </template>
       </el-table-column>
       <el-table-column label="护理要求" align="center" prop="nursingRequirement" />
-      <el-table-column label="状态" align="center" prop="status">
+      <el-table-column label="状态" align="center" prop="status" width="120px">
         <template #default="scope">
-          <el-tag :type="scope.row.status === 1 ? 'success' : 'danger'">{{ scope.row.status === 1 ? '启用' :
-            '禁用' }}</el-tag>
+          <el-tag :type="scope.row.status === 1 ? 'success' : 'danger'">{{scope.row.status === 1 ? '启用' :
+            '禁用'}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
@@ -50,21 +48,21 @@
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" align="center" width="200px" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="200px" fixed="right" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['nursing:project:edit']">修改</el-button>
           <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"
             v-hasPermi="['nursing:project:remove']">删除</el-button>
-          <el-button link type="primary" :icon="scope.row.status === 0 ? 'Unlock' : 'lock'"
-            @click="handleEnable(scope.row)">{{ scope.row.status === 0 ? '启用' : '禁用' }}</el-button>
+          <el-button link type="primary" :icon="scope.row.status === 0 ? 'Unlock' : 'Lock'"
+            @click="handleEnable(scope.row)">{{ scope.row.status === 0 ? '启用' : '禁用'}}</el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <!-- 分页条 -->
-    <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum"
-      v-model:limit="queryParams.pageSize" @pagination="getList" />
+    <pagination v-show="total>0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
+      @pagination="getList" />
 
     <!-- 添加或修改护理项目对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
@@ -83,8 +81,7 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
-            <el-radio v-for="dict in nursing_project_status" :key="dict.value" :label="dict.label"
-              :value="dict.value"></el-radio>
+            <el-radio v-for="dict in nursing_project_status" :key="dict.value" :label="dict.label" :value="dict.value"></el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="图片" prop="image">
@@ -195,7 +192,6 @@ function resetQuery() {
   handleQuery()
 }
 
-
 /** 新增按钮操作 */
 function handleAdd() {
   reset()
@@ -239,27 +235,27 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const _ids = row.id || ids.value
-  proxy.$modal.confirm('是否确认删除护理项目编号为"' + _ids + '"的数据项？').then(function () {
+  proxy.$modal.confirm('是否确认删除护理项目编号为"' + _ids + '"的数据项？').then(function() {
     return delProject(_ids)
   }).then(() => {
     getList()
     proxy.$modal.msgSuccess("删除成功")
-  }).catch(() => { })
+  }).catch(() => {})
 }
 
-/** 禁用按钮操作 */
+/** 删除按钮操作 */
 function handleEnable(row) {
   const params = {
     id: row.id,
     status: row.status === 0 ? 1 : 0
   }
   const msg = row.status === 0 ? '启用' : '禁用'
-  proxy.$modal.confirm(`是否确认${msg}这条护理项目？`).then(function () {
+  proxy.$modal.confirm(`是否确认${msg}这条护理项目？`).then(function() {
     return updateProject(params)
   }).then(() => {
     getList()
     proxy.$modal.msgSuccess(`${msg}成功`)
-  }).catch(() => { })
+  }).catch(() => {})
 }
 
 getList()

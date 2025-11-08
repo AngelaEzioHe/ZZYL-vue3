@@ -43,7 +43,7 @@ export function delPlan(id) {
   })
 }
 
-// 获取所有护理计划（用于下拉选择）
+// 查询所有护理计划
 export function getAllNursingPlans() {
   return request({
     url: '/nursing/plan/all',

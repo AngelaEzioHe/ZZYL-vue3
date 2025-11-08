@@ -70,11 +70,7 @@ function filterAsyncRouter(asyncRouterMap, lastRouter = false, type = false) {
       } else if (route.component === 'InnerLink') {
         route.component = InnerLink
       } else {
-        const component = loadView(route.component)
-        if (!component) {
-          console.error(`[路由加载失败] 路径: ${route.path}, 组件: ${route.component}`)
-        }
-        route.component = component
+        route.component = loadView(route.component)
       }
     }
     if (route.children != null && route.children && route.children.length) {
@@ -124,11 +120,6 @@ export const loadView = (view) => {
     if (dir === view) {
       res = () => modules[path]()
     }
-  }
-  // 如果找不到匹配的组件，输出调试信息
-  if (!res && view) {
-    console.warn(`[路由组件加载失败] 找不到组件路径: ${view}`)
-    console.warn(`[可用的组件路径]`, Object.keys(modules).map(p => p.split('views/')[1].split('.vue')[0]))
   }
   return res
 }
